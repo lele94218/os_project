@@ -9,6 +9,7 @@ typedef int t_id;
 /* define a function pointer */
 typedef void * (*lwt_fn_t)(void *);
 
+
 /* Thread state.  */
 typedef enum _lwt_info_t
 {
@@ -33,22 +34,22 @@ typedef struct _lwt_t
     
     lwt_info_t * status;
 }
-* lwt_t;
+lwt_t;
 
 /* Global variable */
-int initiated=0;
-lwt_t queue_head=0;
-lwt_t queue_head=
+//int initiated=0;
+//lwt_t * queue_head=0;
+//lwt_t * queue_head=
 
 /* Funciton declaration */
-lwt_t lwt_create(lwt_fn_t fn, void *data);
-void * lwt_join(lwt_t);
-void lwt_die(void *);
-int lwt_yield(lwt_t);
-lwt_t lwt_current(void);
-int lwt_id(lwt_t);
-int lwt_info(lwt_info_t t);
-void damn();
+lwt_t * lwt_create(lwt_fn_t fn, void * data);
+//void * lwt_join(lwt_t);
+//void lwt_die(void *);
+//int lwt_yield(lwt_t);
+//lwt_t lwt_current(void);
+//int lwt_id(lwt_t);
+//int lwt_info(lwt_info_t t);
+//void damn();
 
 
 #endif
