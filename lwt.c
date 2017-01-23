@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "lwt.h"
+#include "lwt_dispatch.h"
 
 /* LinkedListNode definiation */
 typedef struct _linked_list_node
@@ -77,7 +78,7 @@ static void initiate()
 lwt_t *
 lwt_create(lwt_fn_t fn, void * data)
 {
-
+    __lwt_dispatch(<#struct lwt_context *curr#>, <#struct lwt_context *next#>);
 
 
 }
