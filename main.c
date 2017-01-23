@@ -1,11 +1,11 @@
+/* standard include */
 #include <stdio.h>
 
-#include "main.h"
+/* user lib include */
+#include "lwt.h"
 
-
-int
-main (int argc, char **argv)
-{
-    return 0;
+int main(){
+	printf("hello world\n");
+	printf("%d\n", sizeof(_lwt_t));
+	return 0;
 }
-
