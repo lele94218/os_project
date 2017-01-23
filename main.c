@@ -1,22 +1,30 @@
 /* standard include */
 #include <stdio.h>
+#include <stdlib.h>
 
 /* user lib include */
-#include "lwt.h"
+//#include "lwt.h"
+#include "lwt_dispatch.h"
 
-int sum(int a, int b)
+void fun();
+int main();
+void fun()
 {
-
-	//if(a>b) return a;
-	return a+b;
+    printf("fun() \n");
 }
 
-int main(){
-	
-	int x=9, y=7;
-	int z=5;
-	int a=sum(x,y);
-	z=6;
-	damn();
-	return 0;
+int main()
+{
+    printf("main() \n");
+    
+    struct lwt_context * main_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
+    main_context->ip = (unsigned long) main;
+    main_context->sp = 0;
+    
+    struct lwt_context * next_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
+    next_context->ip = (unsigned long) fun;
+    next_context->sp = 0;
+    
+    __lwt_dispatch(main_context, next_context);
+    
 }

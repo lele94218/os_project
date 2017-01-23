@@ -1,6 +1,8 @@
 #ifndef LWT_H
 #define LWT_H
 
+#include "lwt_dispatch.h"
+
 /* Data redefinition */
 
 /* Thread id */
@@ -33,6 +35,9 @@ typedef struct _lwt_t
     size_t stack_size;
     
     lwt_info_t * status;
+    
+    /* Thread context */
+    struct lwt_context * context;
 }
 lwt_t;
 
@@ -68,9 +73,6 @@ int add_thread_to_list (lwt_t * thread, linked_list * list);
 int delete_thread_to_list (lwt_t * thread, linked_list * list);
 
 
-/* Global variable */
-int thread_initiated=0;
-linked_list *thread_queue;
 
 #endif
 
