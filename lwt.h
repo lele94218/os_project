@@ -36,21 +36,41 @@ typedef struct _lwt_t
 }
 lwt_t;
 
-/* Global variable */
-//int initiated=0;
-//lwt_t * queue_head=0;
-//lwt_t * queue_head=
+/* LinkedListNode definiation */
+typedef struct _linked_list_node
+{
+    lwt_t * data;
+    struct _linked_list_node * next;
+    struct _linked_list_node * prev;
+}
+linked_list_node;
+
+/* LinkedList definiation */
+typedef struct _linked_list
+{
+    linked_list_node *head, *tail;
+    int node_count;
+}
+linked_list;
+
+
 
 /* Funciton declaration */
-lwt_t * lwt_create(lwt_fn_t fn, void * data);
+int lwt_create(lwt_fn_t fn, void * data);
 //void * lwt_join(lwt_t);
 //void lwt_die(void *);
 //int lwt_yield(lwt_t);
 //lwt_t lwt_current(void);
 //int lwt_id(lwt_t);
 //int lwt_info(lwt_info_t t);
-//void damn();
+void damn();
+int add_thread_to_list (lwt_t * thread, linked_list * list);
+int delete_thread_to_list (lwt_t * thread, linked_list * list);
 
+
+/* Global variable */
+int thread_initiated=0;
+linked_list *thread_queue;
 
 #endif
 
