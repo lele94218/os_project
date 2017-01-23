@@ -4,24 +4,6 @@
 #include "lwt.h"
 #include "lwt_dispatch.h"
 
-/* LinkedListNode definiation */
-typedef struct _linked_list_node
-{
-    lwt_t * data;
-    struct _linked_list_node * next;
-    struct _linked_list_node * prev;
-}
-linked_list_node;
-
-
-
-/* LinkedList definiation */
-typedef struct _linked_list
-{
-    linked_list_node *head, *tail;
-    int node_count;
-}
-linked_list;
 
 int
 add_thread_to_list (lwt_t * thread, linked_list * list)
@@ -63,19 +45,18 @@ delete_thread_to_list (lwt_t * thread, linked_list * list)
     return 0;
 }
 
-
-
 void damn(){
-	printf("fuck\n");
+	printf("this is a test damn\n");
 }
 
 static void initiate()
 {
-
+	thread_initiated=1;
+	thread_queue=(linked_list *) malloc (sizeof(linked_list));
 
 }
 
-lwt_t *
+int
 lwt_create(lwt_fn_t fn, void * data)
 {
     __lwt_dispatch(<#struct lwt_context *curr#>, <#struct lwt_context *next#>);
