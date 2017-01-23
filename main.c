@@ -19,11 +19,11 @@ int main()
     
     struct lwt_context * main_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
     main_context->ip = (unsigned long) main;
-    main_context->sp = 0;
+    main_context->sp = (unsigned long) malloc (100);
     
     struct lwt_context * next_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
     next_context->ip = (unsigned long) fun;
-    next_context->sp = 0;
+    next_context->sp = (unsigned long) malloc (100);
     
     __lwt_dispatch(main_context, next_context);
     
