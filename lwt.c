@@ -33,6 +33,7 @@ __add_thread_to_list (lwt_t * thread, linked_list * list)
     else
     {
         list->tail->next = node;
+        list->tail->prev = list->head;
         list->tail = node;
     }
     
@@ -61,7 +62,7 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
 void
 __get_next_thread (lwt_t * p_thread, linked_list * list)
 {
-    linked_list_node * curr = list->tail->prev;
+    linked_list_node * curr = list->tail;
     // TODO scheduling
     p_thread = curr->data;
 }
