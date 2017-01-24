@@ -61,7 +61,7 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
 void
 __get_next_thread (lwt_t * p_thread, linked_list * list)
 {
-    linked_list_node * curr = list->tail;
+    linked_list_node * curr = list->tail->prev;
     // TODO scheduling
     p_thread = curr->data;
 }
