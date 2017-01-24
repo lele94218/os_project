@@ -63,18 +63,14 @@ typedef struct _linked_list
 linked_list;
 
 
-
 /* Funciton declaration */
-int lwt_create(lwt_fn_t fn, void * data);
+lwt_t * lwt_create(lwt_fn_t fn, void * data);
 //void * lwt_join(lwt_t);
 //void lwt_die(void *);
 //int lwt_yield(lwt_t);
 //lwt_t lwt_current(void);
 //int lwt_id(lwt_t);
 //int lwt_info(lwt_info_t t);
-void damn();
-int add_thread_to_list (lwt_t * thread, linked_list * list);
-int delete_thread_to_list (lwt_t * thread, linked_list * list);
 
 
 

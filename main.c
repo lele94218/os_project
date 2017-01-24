@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /* user lib include */
-//#include "lwt.h"
+#include "lwt.h"
 #include "lwt_dispatch.h"
 
 void fun();
@@ -15,16 +15,6 @@ void fun()
 
 int main()
 {
-    printf("main() \n");
-    
-    struct lwt_context * main_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
-    main_context->ip = (unsigned long) main;
-    main_context->sp = (unsigned long) malloc (100);
-    
-    struct lwt_context * next_context = (struct lwt_context *) malloc (sizeof (struct lwt_context));
-    next_context->ip = (unsigned long) fun;
-    next_context->sp = (unsigned long) malloc (100);
-    
-    __lwt_dispatch(main_context, next_context);
+    lwt_t * t1 = lwt_create(fun, NULL);
     
 }
