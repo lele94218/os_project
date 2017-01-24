@@ -13,7 +13,7 @@ struct lwt_context * p_schedule_context = NULL;
 
 /** extern function declaration */
 void __lwt_schedule (void);
-void __get_next_thread (lwt_t *, linked_list *);
+lwt_t*  __get_next_thread (lwt_t *, linked_list *);
 int __add_thread_to_list (lwt_t * thread, linked_list * list);
 int __delete_thread_to_list (lwt_t * thread, linked_list * list);
 static void __initiate(void);
@@ -59,12 +59,13 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
     return 0;
 }
 
-void
+lwt_t*
 __get_next_thread (lwt_t * p_thread, linked_list * list)
 {
     linked_list_node * curr = list->tail;
     // TODO scheduling
     p_thread = curr->data;
+    return p_thread;
 }
 
 void
@@ -72,11 +73,11 @@ __lwt_schedule ()
 {
     while (1)
     {
-        printf("schedule()!\n");
-        lwt_t * p_thread = NULL;
-        __get_next_thread(p_thread, thread_queue);
+//        puts("schedule()!\n");
+        lwt_t * p_thread;
+        p_thread=__get_next_thread(p_thread, thread_queue);
         if (!p_thread)
-            __lwt_dispatch(current_thread->context, p_thread->context);
+         __lwt_dispatch(current_thread->context, p_thread->context);
     }
 }
 
