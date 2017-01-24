@@ -85,6 +85,9 @@ __initiate()
     thread_initiated = 1;
     thread_queue = (linked_list * ) malloc (sizeof(linked_list));
     current_thread = (lwt_t * ) malloc (sizeof(lwt_t));
+    current_thread->context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
+    current_thread->context->sp = (uint)malloc(100);
+    ///
     __add_thread_to_list(current_thread, thread_queue);
     
     // Init schedule context
@@ -103,8 +106,12 @@ lwt_create(lwt_fn_t fn, void * data)
     int return_value = 1;
     lwt_t * next_thread = (lwt_t *) malloc(sizeof(lwt_t));
     next_thread->context = (struct lwt_context *) malloc (sizeof(struct lwt_context));
-    next_thread->stack_addr = (void *) malloc(sizeof(100));
-    next_thread->context->ip = (unsigned long) fn;
+    uint _sp = (uint) malloc(100);
+    _sp += (100 - sizeof(uint));
+    *((uint *)_sp) = (uint)__lwt_schedule;
+    next_thread->context->sp = _sp;
+    next_thread->context->ip = (uint) fn;
+    __add_thread_to_list(next_thread, thread_queue);
     
     __lwt_dispatch(current_thread->context, p_schedule_context);
     

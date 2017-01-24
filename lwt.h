@@ -34,10 +34,6 @@ typedef struct _lwt_t
     /* Thread id */
     t_id lwt_id;
     
-    /* Thread stack */
-    void * stack_addr;
-    size_t stack_size;
-    
     lwt_info_t * status;
     
     /* Thread context */
