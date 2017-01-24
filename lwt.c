@@ -33,7 +33,7 @@ __add_thread_to_list (lwt_t * thread, linked_list * list)
     else
     {
         list->tail->next = node;
-        list->tail->prev = list->head;
+        node->prev = list->tail;
         list->tail = node;
     }
     
