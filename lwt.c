@@ -77,7 +77,7 @@ __lwt_schedule ()
         lwt_t * p_thread;
         p_thread=__get_next_thread(p_thread, thread_queue);
         if (!p_thread)
-         __lwt_dispatch(current_thread->context, p_thread->context);
+            __lwt_dispatch(current_thread->context, p_thread->context);
     }
 }
 
