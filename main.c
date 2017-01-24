@@ -15,6 +15,6 @@ void fun()
 
 int main()
 {
-    lwt_t * t1 = lwt_create(fun, NULL);
+    lwt_t * t1 = lwt_create((void *) fun, NULL);
     
 }
