@@ -4,6 +4,10 @@
 #include "lwt_dispatch.h"
 
 /* Data redefinition */
+typedef unsigned int uint;
+typedef unsigned short ushort;
+typedef unsigned char uchar;
+
 
 /* Thread id */
 typedef int t_id;
