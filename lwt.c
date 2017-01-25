@@ -100,7 +100,7 @@ __initiate()
     current_thread->status = LWT_INFO_NTHD_RUNNABLE;
     
     /* Add to TCB */
-    __add_thread_to_list(current_thread, &thread_queue);
+    __add_thread_to_list(current_thread);
     
     /* Initiate schedule_context */
     uint _sp = (uint) malloc(100);
@@ -133,7 +133,7 @@ lwt_create(lwt_fn_t fn, void * data)
     next_thread->context.ip = (uint) fn;
     
     
-    __add_thread_to_list(next_thread, &thread_queue);
+    __add_thread_to_list(next_thread);
     
     __lwt_dispatch(&current_thread->context, &schedule_context);
     
