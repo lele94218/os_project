@@ -120,8 +120,7 @@ lwt_create(lwt_fn_t fn, void * data)
     _sp += (100 - sizeof(uint));
     *((uint *)_sp) = (uint)NULL;
     _sp -= (sizeof(uint));
-    *((uint *)_sp) = (uint)__lwt_schedule;
-    
+    *((uint *)_sp) = (uint)lwt_die;
     
     
     
