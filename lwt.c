@@ -8,9 +8,10 @@
 int lwt_counter = 0;
 int thread_initiated = 0;
 
-static lwt_context schedule_context;
-static linked_list thread_queue;
-static lwt_t * current_thread = NULL;
+lwt_context schedule_context;
+linked_list thread_queue;
+lwt_t * current_thread;
+
 
 /** extern function declaration */
 void __lwt_schedule (void);
@@ -152,7 +153,7 @@ lwt_die(void * p_thread)
         /* TODO kill specialfic thread */
     }
     
-    thread_queue.node_count --;
+    //thread_queue.node_count --;
     
     __lwt_schedule();
 }

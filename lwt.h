@@ -74,6 +74,9 @@ void lwt_die(void *);
 
 
 
+extern lwt_context schedule_context;
+extern linked_list thread_queue;
+extern lwt_t * current_thread;
 
 
 #endif
