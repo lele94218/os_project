@@ -6,7 +6,7 @@
 
 /* Global variable */
 static int thread_initiated = 0;
-static linked_list * thread_queue = NULL;
+static linked_list thread_queue;
 static lwt_t * current_thread = NULL;
 static struct lwt_context * p_schedule_context = NULL;
 
@@ -72,7 +72,7 @@ __lwt_schedule ()
     while (1)
     {
         lwt_t * p_thread;
-        p_thread=__get_next_thread(thread_queue);
+        p_thread=__get_next_thread(&thread_queue);
         if (p_thread)
             __lwt_dispatch(current_thread->context, p_thread->context);
     }
@@ -84,7 +84,6 @@ __initiate()
     thread_initiated = 1;
     
     /* Add main thread to TCB */
-    thread_queue = (linked_list * ) malloc (sizeof(linked_list));
     current_thread = (lwt_t * ) malloc (sizeof(lwt_t));
     current_thread->context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
     current_thread->context->sp = (uint)malloc(100);
@@ -93,7 +92,7 @@ __initiate()
     // __schedule -> sp???? 
     
     /* Add to TCB */
-    __add_thread_to_list(current_thread, thread_queue);
+    __add_thread_to_list(current_thread, &thread_queue);
     
     /* Init schedule context */
     p_schedule_context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
@@ -118,7 +117,7 @@ lwt_create(lwt_fn_t fn, void * data)
     *((uint *)_sp) = (uint)__lwt_schedule;
     next_thread->context->sp = _sp;
     next_thread->context->ip = (uint) fn;
-    __add_thread_to_list(next_thread, thread_queue);
+    __add_thread_to_list(next_thread, &thread_queue);
     
     __lwt_dispatch(current_thread->context, p_schedule_context);
     
