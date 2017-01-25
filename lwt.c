@@ -9,7 +9,7 @@ int lwt_counter = 0;
 int thread_initiated = 0;
 
 lwt_context schedule_context;
-extern linked_list thread_queue;
+linked_list thread_queue;
 lwt_t * current_thread;
 
 
@@ -68,7 +68,7 @@ __get_next_thread ()
 {
     linked_list_node * curr = thread_queue.tail;
     // TODO scheduling
-    while (curr && curr != thread_queue.head)
+    while (curr)
     {
         if (curr->data->status == LWT_INFO_NTHD_RUNNABLE){
             return curr->data;
