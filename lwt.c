@@ -23,6 +23,7 @@ static void __initiate(void);
 int
 __add_thread_to_list (lwt_t * thread)
 {
+    
     linked_list_node * node = (linked_list_node *) malloc (sizeof (linked_list_node));
     node->data = thread;
     node->next = NULL;
