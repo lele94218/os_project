@@ -5,7 +5,9 @@
 #include "lwt_dispatch.h"
 
 /* Global variable */
+int lwt_counter = 0;
 int thread_initiated = 0;
+
 static lwt_context schedule_context;
 static linked_list thread_queue;
 static lwt_t * current_thread = NULL;
@@ -64,7 +66,14 @@ __get_next_thread (linked_list * list)
 {
     linked_list_node * curr = list->tail;
     // TODO scheduling
-    return curr->data;
+    while (curr && curr != list->head)
+    {
+        if (curr->data->status == LWT_INFO_NTHD_RUNNABLE){
+            return curr->data;
+        }
+        curr = curr->prev;
+    }
+    return NULL;
 }
 
 void
@@ -72,10 +81,9 @@ __lwt_schedule ()
 {
     while (1)
     {
-        lwt_t * p_thread;
-        p_thread=__get_next_thread(&thread_queue);
-        if (p_thread)
-            __lwt_dispatch(&current_thread->context, &p_thread->context);
+        current_thread = __get_next_thread(&thread_queue);
+        if (current_thread)
+            __lwt_dispatch(&schedule_context, &current_thread->context);
     }
 }
 
@@ -86,6 +94,8 @@ __initiate()
     
     /* Add main thread to TCB */
     current_thread = (lwt_t * ) malloc (sizeof(lwt_t));
+    current_thread->lwt_id = lwt_counter ++;
+    current_thread->status = LWT_INFO_NTHD_RUNNABLE;
     
     /* Add to TCB */
     __add_thread_to_list(current_thread, &thread_queue);
@@ -105,10 +115,19 @@ lwt_create(lwt_fn_t fn, void * data)
     if(!thread_initiated) __initiate();
     lwt_t * next_thread = (lwt_t *) malloc (sizeof(lwt_t));
     
-    /* Default return schedule */
+    /* Return lwt_die */
     uint _sp = (uint) malloc(100);
     _sp += (100 - sizeof(uint));
+    *((uint *)_sp) = (uint)NULL;
+    _sp -= (sizeof(uint));
     *((uint *)_sp) = (uint)__lwt_schedule;
+    
+    
+    
+    
+    /* Construct new thread */
+    next_thread->lwt_id = lwt_counter ++;
+    next_thread->status = LWT_INFO_NTHD_RUNNABLE;
     next_thread->context.sp = _sp;
     next_thread->context.ip = (uint) fn;
     
@@ -118,4 +137,23 @@ lwt_create(lwt_fn_t fn, void * data)
     __lwt_dispatch(&current_thread->context, &schedule_context);
     
     return next_thread;
+}
+
+void
+lwt_die(void * p_thread)
+{
+    if (!p_thread)
+    {
+        /* lwt_die(NULL) */
+        current_thread->status = LWT_INFO_NTHD_ZOMBIES;
+        
+    }
+    else
+    {
+        /* TODO kill specialfic thread */
+    }
+    
+    thread_queue.node_count --;
+    
+    __lwt_schedule();
 }

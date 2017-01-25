@@ -66,7 +66,7 @@ linked_list;
 /* Funciton declaration */
 lwt_t * lwt_create(lwt_fn_t fn, void * data);
 //void * lwt_join(lwt_t);
-//void lwt_die(void *);
+void lwt_die(void *);
 //int lwt_yield(lwt_t);
 //lwt_t lwt_current(void);
 //int lwt_id(lwt_t);
