@@ -16,16 +16,16 @@ lwt_t * current_thread;
 /** extern function declaration */
 void __lwt_schedule (void);
 lwt_t *  __get_next_thread ();
-int __add_thread_to_list (lwt_t * thread);
+int __add_thread_to_list (lwt_t ** thread);
 int __delete_thread_to_list (lwt_t * thread, linked_list * list);
 static void __initiate(void);
 
 int
-__add_thread_to_list (lwt_t * thread)
+__add_thread_to_list (lwt_t ** thread)
 {
     
     linked_list_node * node = (linked_list_node *) malloc (sizeof (linked_list_node));
-    node->data = thread;
+    node->data = *thread;
     node->next = NULL;
     
     if (!thread_queue.node_count)
@@ -100,7 +100,7 @@ __initiate()
     current_thread->status = LWT_INFO_NTHD_RUNNABLE;
     
     /* Add to TCB */
-    __add_thread_to_list(current_thread);
+    __add_thread_to_list(&current_thread);
     
     /* Initiate schedule_context */
     uint _sp = (uint) malloc(100);
@@ -133,7 +133,7 @@ lwt_create(lwt_fn_t fn, void * data)
     next_thread->context.ip = (uint) fn;
     
     
-    __add_thread_to_list(next_thread);
+    __add_thread_to_list(&next_thread);
     
     __lwt_dispatch(&current_thread->context, &schedule_context);
     
