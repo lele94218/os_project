@@ -9,7 +9,7 @@ int lwt_counter = 0;
 int thread_initiated = 0;
 
 lwt_context schedule_context;
-linked_list thread_queue;
+extern linked_list thread_queue;
 lwt_t * current_thread;
 
 
@@ -103,8 +103,8 @@ __initiate()
     __add_thread_to_list(&current_thread);
     
     /* Initiate schedule_context */
-    uint _sp = (uint) malloc(100);
-    _sp += (100 - sizeof(uint));
+    uint _sp = (uint) malloc(MAX_STACK_SIZE);
+    _sp += (MAX_STACK_SIZE - sizeof(uint));
     *((uint *)_sp) = (uint)__lwt_schedule;
     schedule_context.sp = _sp;
     schedule_context.ip = (uint) __lwt_schedule;
@@ -118,8 +118,8 @@ lwt_create(lwt_fn_t fn, void * data)
     lwt_t * next_thread = (lwt_t *) malloc (sizeof(lwt_t));
     
     /* Return lwt_die */
-    uint _sp = (uint) malloc(100);
-    _sp += (100 - sizeof(uint));
+    uint _sp = (uint) malloc(MAX_STACK_SIZE);
+    _sp += (MAX_STACK_SIZE - sizeof(uint));
     *((uint *)_sp) = (uint)NULL;
     _sp -= (sizeof(uint));
     *((uint *)_sp) = (uint)lwt_die;

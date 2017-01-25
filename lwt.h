@@ -4,6 +4,8 @@
 /* */
 #include "lwt_dispatch.h"
 
+#define MAX_STACK_SIZE 4096
+
 
 
 /* Data redefinition */
