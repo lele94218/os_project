@@ -5,7 +5,7 @@
 #include "lwt_dispatch.h"
 
 /* Global variable */
-static int thread_initiated = 0;
+int thread_initiated = 0;
 static lwt_context schedule_context;
 static linked_list thread_queue;
 static lwt_t * current_thread = NULL;
@@ -75,7 +75,7 @@ __lwt_schedule ()
         lwt_t * p_thread;
         p_thread=__get_next_thread(&thread_queue);
         if (p_thread)
-            __lwt_dispatch(current_thread->context, p_thread->context);
+            __lwt_dispatch(&current_thread->context, &p_thread->context);
     }
 }
 
@@ -104,19 +104,18 @@ lwt_create(lwt_fn_t fn, void * data)
 {
     if(!thread_initiated) __initiate();
     lwt_t * next_thread = (lwt_t *) malloc (sizeof(lwt_t));
-    next_thread->context = (lwt_context *) malloc (sizeof(lwt_context));
     
     /* Default return schedule */
     uint _sp = (uint) malloc(100);
     _sp += (100 - sizeof(uint));
     *((uint *)_sp) = (uint)__lwt_schedule;
-    next_thread->context->sp = _sp;
-    next_thread->context->ip = (uint) fn;
+    next_thread->context.sp = _sp;
+    next_thread->context.ip = (uint) fn;
     
     
     __add_thread_to_list(next_thread, &thread_queue);
     
-    __lwt_dispatch(current_thread->context, &schedule_context);
+    __lwt_dispatch(&current_thread->context, &schedule_context);
     
     return next_thread;
 }
