@@ -5,12 +5,6 @@
 #include "lwt_dispatch.h"
 
 
-/* Global variable */
-int thread_initiated = 0;
-/* TCB */
-linked_list * thread_queue = NULL;
-lwt_t * current_thread = NULL;
-struct lwt_context * p_schedule_context = NULL;
 
 /** extern function declaration */
 void __lwt_schedule (void);
