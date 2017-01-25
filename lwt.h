@@ -73,11 +73,7 @@ lwt_t * lwt_create(lwt_fn_t fn, void * data);
 //int lwt_info(lwt_info_t t);
 
 
-/* Global variable */
-int thread_initiated = 0;
-linked_list * thread_queue = NULL;
-lwt_t * current_thread = NULL;
-struct lwt_context * p_schedule_context = NULL;
+
 
 
 #endif

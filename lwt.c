@@ -4,7 +4,11 @@
 #include "lwt.h"
 #include "lwt_dispatch.h"
 
-
+/* Global variable */
+static int thread_initiated = 0;
+static linked_list * thread_queue = NULL;
+static lwt_t * current_thread = NULL;
+static struct lwt_context * p_schedule_context = NULL;
 
 /** extern function declaration */
 void __lwt_schedule (void);
