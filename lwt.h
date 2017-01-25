@@ -41,7 +41,7 @@ typedef struct _lwt_t
     lwt_info_t * status;
     
     /* Thread context */
-    struct lwt_context * context;
+    lwt_context * context;
 }
 lwt_t;
 

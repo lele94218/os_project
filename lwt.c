@@ -6,9 +6,9 @@
 
 /* Global variable */
 static int thread_initiated = 0;
+static lwt_context schedule_context;
 static linked_list thread_queue;
 static lwt_t * current_thread = NULL;
-static struct lwt_context * p_schedule_context = NULL;
 
 /** extern function declaration */
 void __lwt_schedule (void);
@@ -51,6 +51,7 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
         {
             curr->prev->next = curr->next;
             curr->next->prev = curr->prev;
+            /* Free or not? */
             free(curr);
             return 1;
         }
@@ -85,41 +86,37 @@ __initiate()
     
     /* Add main thread to TCB */
     current_thread = (lwt_t * ) malloc (sizeof(lwt_t));
-    current_thread->context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
-    current_thread->context->sp = (uint)malloc(100);
-    
-    /* Get main thread %esp -> sp */
-    // __schedule -> sp???? 
     
     /* Add to TCB */
     __add_thread_to_list(current_thread, &thread_queue);
     
-    /* Init schedule context */
-    p_schedule_context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
-    p_schedule_context->ip = (uint) __lwt_schedule;
-    uint _sp = (uint) malloc (100);
+    /* Initiate schedule_context */
+    uint _sp = (uint) malloc(100);
     _sp += (100 - sizeof(uint));
-    
-    /* Need or not? */
     *((uint *)_sp) = (uint)__lwt_schedule;
-    p_schedule_context->sp = _sp;
+    schedule_context.sp = _sp;
+    schedule_context.ip = (uint) __lwt_schedule;
+
 }
 
 lwt_t *
 lwt_create(lwt_fn_t fn, void * data)
 {
     if(!thread_initiated) __initiate();
-    int return_value = 1;
-    lwt_t * next_thread = (lwt_t *) malloc(sizeof(lwt_t));
-    next_thread->context = (struct lwt_context *) malloc (sizeof(struct lwt_context));
+    lwt_t * next_thread = (lwt_t *) malloc (sizeof(lwt_t));
+    next_thread->context = (lwt_context *) malloc (sizeof(lwt_context));
+    
+    /* Default return schedule */
     uint _sp = (uint) malloc(100);
     _sp += (100 - sizeof(uint));
     *((uint *)_sp) = (uint)__lwt_schedule;
     next_thread->context->sp = _sp;
     next_thread->context->ip = (uint) fn;
+    
+    
     __add_thread_to_list(next_thread, &thread_queue);
     
-    __lwt_dispatch(current_thread->context, p_schedule_context);
+    __lwt_dispatch(current_thread->context, &schedule_context);
     
     return next_thread;
 }
