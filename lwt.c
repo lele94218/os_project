@@ -15,32 +15,32 @@ lwt_t * current_thread;
 
 /** extern function declaration */
 void __lwt_schedule (void);
-lwt_t *  __get_next_thread (linked_list *);
-int __add_thread_to_list (lwt_t * thread, linked_list * list);
+lwt_t *  __get_next_thread ();
+int __add_thread_to_list (lwt_t * thread);
 int __delete_thread_to_list (lwt_t * thread, linked_list * list);
 static void __initiate(void);
 
 int
-__add_thread_to_list (lwt_t * thread, linked_list * list)
+__add_thread_to_list (lwt_t * thread)
 {
     linked_list_node * node = (linked_list_node *) malloc (sizeof (linked_list_node));
     node->data = thread;
     node->next = NULL;
     
-    if (!list->node_count)
+    if (!thread_queue.node_count)
     {
-        list->head = node;
-        list->tail = node;
+        thread_queue.head = node;
+        thread_queue.tail = node;
     }
     else
     {
-        list->tail->next = node;
-        node->prev = list->tail;
-        list->tail = node;
+        thread_queue.tail->next = node;
+        node->prev = thread_queue.tail;
+        thread_queue.tail = node;
     }
     
-    ++ list->node_count;
-    return list->node_count - 1;
+    ++ thread_queue.node_count;
+    return thread_queue.node_count - 1;
 }
 
 int
@@ -63,11 +63,11 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
 }
 
 lwt_t *
-__get_next_thread (linked_list * list)
+__get_next_thread ()
 {
-    linked_list_node * curr = list->tail;
+    linked_list_node * curr = thread_queue.tail;
     // TODO scheduling
-    while (curr && curr != list->head)
+    while (curr && curr != thread_queue.head)
     {
         if (curr->data->status == LWT_INFO_NTHD_RUNNABLE){
             return curr->data;
