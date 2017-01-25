@@ -7,13 +7,14 @@
 
 /* Global variable */
 int thread_initiated = 0;
+/* TCB */
 linked_list * thread_queue = NULL;
 lwt_t * current_thread = NULL;
 struct lwt_context * p_schedule_context = NULL;
 
 /** extern function declaration */
 void __lwt_schedule (void);
-lwt_t*  __get_next_thread (lwt_t *, linked_list *);
+lwt_t *  __get_next_thread (linked_list *);
 int __add_thread_to_list (lwt_t * thread, linked_list * list);
 int __delete_thread_to_list (lwt_t * thread, linked_list * list);
 static void __initiate(void);
@@ -59,13 +60,12 @@ __delete_thread_to_list (lwt_t * thread, linked_list * list)
     return 0;
 }
 
-lwt_t*
-__get_next_thread (lwt_t * p_thread, linked_list * list)
+lwt_t *
+__get_next_thread (linked_list * list)
 {
     linked_list_node * curr = list->tail;
     // TODO scheduling
-    p_thread = curr->data;
-    return p_thread;
+    return curr->data;
 }
 
 void
@@ -73,9 +73,8 @@ __lwt_schedule ()
 {
     while (1)
     {
-//        puts("schedule()!\n");
         lwt_t * p_thread;
-        p_thread=__get_next_thread(p_thread, thread_queue);
+        p_thread=__get_next_thread(thread_queue);
         if (!p_thread)
             __lwt_dispatch(current_thread->context, p_thread->context);
     }
@@ -85,18 +84,26 @@ static void
 __initiate()
 {
     thread_initiated = 1;
+    
+    /* Add main thread to TCB */
     thread_queue = (linked_list * ) malloc (sizeof(linked_list));
     current_thread = (lwt_t * ) malloc (sizeof(lwt_t));
     current_thread->context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
     current_thread->context->sp = (uint)malloc(100);
-    ///
+    
+    /* Get main thread %esp -> sp */
+    // __schedule -> sp???? 
+    
+    /* Add to TCB */
     __add_thread_to_list(current_thread, thread_queue);
     
-    // Init schedule context
+    /* Init schedule context */
     p_schedule_context = (struct lwt_context *) malloc(sizeof(struct lwt_context));
     p_schedule_context->ip = (uint) __lwt_schedule;
     uint _sp = (uint) malloc (100);
     _sp += (100 - sizeof(uint));
+    
+    /* Need or not? */
     *((uint *)_sp) = (uint)__lwt_schedule;
     p_schedule_context->sp = _sp;
 }
